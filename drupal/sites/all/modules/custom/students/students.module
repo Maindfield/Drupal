@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function students_menu() {
+  $items['admin/config/content/students-config'] = array(
+    'title' => 'Students Config Page',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('students_admin_settings'),
+    'access arguments' => array('access students content'),
+    'file' => 'includes/students.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['add-students'] = array(
+    'title' => 'Add student',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('students_edit_settings'),
+    'access arguments' => array('edit students content'),
+    'file' => 'includes/students.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+function students_permission() {
+  return array(
+    'access students content' => array(
+      'title' => t('Administer Students content'),
+      'description' => t('Perform administration tasks for Students module.'),
+    ),
+    'edit students content' => array(
+      'title' => t('Edit Students content'),
+      'description' => t('Perform administration tasks for Students module.'),
+    ),
+    'delete students content' => array(
+      'title' => t('Delete Students content'),
+      'description' => t('Perform administration tasks for Students module.'),
+    ),
+  );
+}
+
