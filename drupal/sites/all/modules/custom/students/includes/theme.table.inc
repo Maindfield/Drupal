@@ -11,9 +11,9 @@
  * @ingroup forms
  * @see students_edit_settings().
  */
-function students_theme_table($variables) {
+function main_table() {
   // Table header
-  $table_header = array(
+  $header = array(
     // Column 1
     'id' => array(
       'data' => 'id',
@@ -34,40 +34,34 @@ function students_theme_table($variables) {
       'data' => t('Students gender'),
       'class' => 'col-gender',
     ),
+    // Column 4
+    'edit' => array(
+      'data' => l(t('edit student'), 'students'),
+      'class' => 'col-edit',
+    ),
+    // Column 5
+    'delete' => array(
+      'data' => t('Delete'),
+      'class' => 'col-delete',
+    ),
   );
   // Table rows
-  $sql = "SELECT id, name, faculty, gender FROM {students}";
-  $res = db_query($sql);
-  $table_rows = array();
-  while ($row = db_fetch_object($res)) {
-    $table_rows[] = array(
-      'id' => array(
-        // Column 1
-        'id' => array(
-          'data' => $row->id,
-          'class' => 'col-id',
-        ),
-        // Column 2
-        'name' => array(
-          'data' => l($row->name, 'students/' . $row->id),
-          'class' => 'col-name',
-        ),
-        // Column 3
-        'faculty' => array(
-          'data' => l($row->faculty, 'students/' . $row->faculty),
-          'class' => 'col-faculty',
-        ),
-      ),
-      // Row attributes
-      'id' => 'students-row-' . $row->id,
-      'class' => 'students-row',
-    );
+  $query = db_select('students', 's')
+      ->fields('s', array('name', 'gender', 'faculty',))
+      ->addTag('node_access');
+  $result = $query->execute();
+
+  $header = array('Name', 'Gender', 'Faculty', 'Edit', 'Delete');
+
+  $rows = array();
+  foreach ($result as $record) {
+    $rows[] = array(
+      $record->name,
+      $record->gender,
+      $record->faculty);
   }
-  // Format and print out the table.
-  return theme('table', array(
-    'header' => $table_header,
-    'rows' => $table_rows,
-    'id' => 'table-articles',
-    'class' => 'students',
-  ));
+  
+  return array('#markup' => theme('table', array(
+      'header' => $header,
+      'rows' => $rows)));
 }
