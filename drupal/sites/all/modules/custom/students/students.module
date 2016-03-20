@@ -4,32 +4,44 @@
  * Implements hook_menu().
  */
 function students_menu() {
-  $items['admin/config/content/students-config'] = array(
-    'title' => 'Students Config Page',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('students_admin_settings'),
+  $items = array();
+  $items['students'] = array(
+    'title' => t('Students'),
+    'page callback' => 'students_list',
     'access arguments' => array('access students content'),
-    'file' => 'includes/students.admin.inc',
-    'type' => MENU_NORMAL_ITEM,
+    'file' => 'includes/students.table.inc',
   );
   $items['add-students'] = array(
     'title' => 'Add student',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('students_edit_settings'),
+    'page arguments' => array('students_add_list'),
     'access arguments' => array('edit students content'),
-    'file' => 'includes/node.pages.inc',
-    'type' => MENU_NORMAL_ITEM,
+    'file' => 'includes/students.pages.inc',
+    'type' => MENU_NORMAL_ITEM
   );
-  $items['students'] = array(
-    'title' => 'Students page',
-    'page callback' => 'main_table',
-    'access arguments' => array('access students content'),
-    'file' => 'includes/theme.table.inc',
-    'type' => MENU_NORMAL_ITEM,
+  $items['students/delete/%'] = array(
+    'title' => t('Delete Student'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('students_delete_confirm', 2),
+    'access arguments' => array('delete students content'),
+    'file' => 'includes/students.table.inc',
+    'type' => MENU_NORMAL_ITEM
   );
+  $items['students/edit/%'] = array(
+    'title' => t('Edit Product'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('students_edit_confirm', 2),
+    'access arguments' => array('edit students content'),
+    'file' => 'includes/students.table.inc',
+    'type' => MENU_NORMAL_ITEM
+  );
+
   return $items;
 }
 
+/**
+ * Implements hook_permission().
+ */
 function students_permission() {
   return array(
     'access students content' => array(
